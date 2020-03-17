@@ -286,7 +286,8 @@ $(function () {
         $(".message").val("");
     });
     database.ref(chatBox.reference).on("value", function(snapshot){
-        if(snapshot.val().user !== "" && session.playerId !==0{
+
+        if(snapshot.val().user !== "" && session.playerId !==0){
             var mssgView = $(".texts");
             mssgView.append("<div class='sentMessage'>" + snapshot.val().user + ": "+ snapshot.val().message +"</div>");
             chatBox.height += parseInt($('.sentMessage').height());
