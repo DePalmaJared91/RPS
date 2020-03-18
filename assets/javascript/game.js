@@ -10,6 +10,9 @@ $(function () {
     };
     firebase.initializeApp(config);
     var database = firebase.database();
+    import firebase from 'firebase/app';
+    import 'firebase/firestore';
+    import 'firebase/message';
 
     var game = {
         reference: "room",
@@ -236,62 +239,62 @@ $(function () {
         game.timeOut = setTimeout(resetGame, 3000);
 
     }
-    function updateScores(){
-        database.ref(game.reference+"/player1").update({
-            wins : game.p1Wins,
-            loses : game.p1Losses
+    function updateScores() {
+        database.ref(game.reference + "/player1").update({
+            wins: game.p1Wins,
+            loses: game.p1Losses
         });
-        database.ref(game.reference+"/player2").update({
-            wins : game.p2Wins,
-            loses : game.p2Losses
+        database.ref(game.reference + "/player2").update({
+            wins: game.p2Wins,
+            loses: game.p2Losses
         });
     }
-        function updateWinLoseTag(){
-            $(".p1Wins").text(game.p1Wins);
-            $(".p1Losses").text(game.p1Losses);
-            $(".p2Wins").text(game.p2Wins);
-            $("p2Losses").text(game.p2Losses);
-        }
-        function resetGame(){
-            session.choice = "";
-            session.choiceLonger = "";
-            session.isChecked = false;
-            $("#choices" + session.playerId).show();
-            $(".chosen").hide();
-            $(".outcome").text("");
-            database.ref(game.reference+"/player1").update({
-                    choice : null,
-                    lChoice : null
+    function updateWinLoseTag() {
+        $(".p1Wins").text(game.p1Wins);
+        $(".p1Losses").text(game.p1Losses);
+        $(".p2Wins").text(game.p2Wins);
+        $("p2Losses").text(game.p2Losses);
+    }
+    function resetGame() {
+        session.choice = "";
+        session.choiceLonger = "";
+        session.isChecked = false;
+        $("#choices" + session.playerId).show();
+        $(".chosen").hide();
+        $(".outcome").text("");
+        database.ref(game.reference + "/player1").update({
+            choice: null,
+            lChoice: null
 
-            });
-        }
-        function checkDisconnect(){
-            database.ref(game.reference+"/player" + session.playerId).onDisconnect().set({});
-            database.ref(chatBox.reference).onDisconnect().update({
-                user : session.playerName,
-                message : "Has Disconnected"
+        });
+    }
+    function checkDisconnect() {
+        database.ref(game.reference + "/player" + session.playerId).onDisconnect().set({});
+        database.ref(chatBox.reference).onDisconnect().update({
+            user: session.playerName,
+            message: "Has Disconnected"
         });
     }
     //228866//
-    $(".messageInput").on("submit", function(event){
+    $(".messageInput").on("submit", function (event) {
         event.preventDefault();
         var inputMessage = $(".message").val();
 
-        if(inputMessage != ""){
+        if (inputMessage != "") {
             database.ref(chatBox.reference).set({
-                user : session.playerName,
-                message : inputMessage
+                user: session.playerName,
+                message: inputMessage
             });
         }
         $(".message").val("");
     });
-    database.ref(chatBox.reference).on("value", function(snapshot){
+    database.ref(chatBox.reference).on("value", function (snapshot) {
 
-        if(snapshot.val().user !== "" && session.playerId !==0){
+        if (snapshot.val().user !== "" && session.playerId !== 0) {
             var mssgView = $(".texts");
-            mssgView.append("<div class='sentMessage'>" + snapshot.val().user + ": "+ snapshot.val().message +"</div>");
+            mssgView.append("<div class='sentMessage'>" + snapshot.val().user + ": " + snapshot.val().message + "</div>");
             chatBox.height += parseInt($('.sentMessage').height());
-            $('.texts').animate({scrollTop: chatBox.height});
+            $('.texts').animate({ scrollTop: chatBox.height });
         }
     });
 });
